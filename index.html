@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        .upload-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .file-input-group, .sheet-type-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .file-input, .sheet-type-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .process-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .process-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .status-message.success { background-color: #dff0d8; color: #3c763d; display: block; }
+        .status-message.error { background-color: #f2dede; color: #a94442; display: block; }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Expense Tracker</h1>
+        
+        <div class="file-input-group">
+            <label class="form-label">Select Spreadsheet File</label>
+            <input type="file" class="file-input" accept=".xlsx,.xls,.csv">
+        </div>
+
+        <div class="sheet-type-group">
+            <label class="form-label">Select Statement Type</label>
+            <select class="sheet-type-select">
+                <option value="">Choose a statement type...</option>
+                <option value="hapoalimStatement">Bank Hapoalim Statement</option>
+                <option value="chaseCredit">Chase Credit Card</option>
+                <option value="chaseChecking">Chase Checking</option>
+                <option value="amex">American Express</option>
+                <option value="wellsFargo">Wells Fargo</option>
+            </select>
+        </div>
+
+        <button class="process-button" disabled>Process Spreadsheet</button>
+        <button class="get-all-transactions">Show All Transactions</button>
+        <div class="status-message"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 

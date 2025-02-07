@@ -47,9 +47,27 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
 		console.log('type', type)
 		const normalizedData = await processSpreadsheet(req.file.buffer, type)
 		console.log('normalizedData', normalizedData)
-		await db('transactions').insert(normalizedData)
+		
+		// Get count before insertion
+		const beforeCount = await db('transactions').count('* as count').first()
+		
+		// Insert records and ignore duplicates
+		await db('transactions')
+			.insert(normalizedData)
+			.onConflict(['date', 'title', 'amount', 'transactionId'])
+			.ignore()
+			
+		// Get count after insertion
+		const afterCount = await db('transactions').count('* as count').first()
+		
+		// Calculate actual number of inserted records
+		const insertedCount = afterCount.count - beforeCount.count
 
-		res.json({ message: 'File processed successfully', count: normalizedData.length })
+		res.json({ 
+			message: 'File processed successfully', 
+			count: insertedCount,
+			totalRecords: afterCount.count
+		})
 	} catch (error) {
 		console.error('Upload error:', error)
 		res.status(500).json({ error: error.message })

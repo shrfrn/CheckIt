@@ -41,6 +41,9 @@ async function initDatabase() {
 			table.timestamp('insertedAt').notNullable()
 			table.string('category')
 			table.string('currency').notNullable()
+
+			// Add unique index on combination of fields
+			table.unique(['date', 'title', 'amount', 'transactionId'], 'unique_transaction_idx')
 		})
 
 		// Create indices

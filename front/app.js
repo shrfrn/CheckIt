@@ -72,7 +72,8 @@ const handleTypeSelect = () => {
 const handleProcess = async () => {
 	try {
 		const result = await api.uploadFile(state.fileData, state.sheetType)
-		updateUI.status(`File processed successfully! ${result.count} transactions imported.`, 'success')
+		alert(`Successfully imported ${result.count} transactions`)
+		updateUI.status('File processed successfully!', 'success')
 	} catch (err) {
 		updateUI.status('Error processing file: ' + err.message, 'error')
 		console.error('Processing error:', err)

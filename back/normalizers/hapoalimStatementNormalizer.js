@@ -24,15 +24,22 @@ export function normalizeHapoalimStatementData(rows) {
     // Transform the data to use our expected field names
     const normalizedRows = rows.map(row => {
         const newRow = {}
-        Object.entries(fieldMap).forEach(([xlsxField, hebrewField]) => {
-            newRow[hebrewField] = row[xlsxField]
-        })
+        // Check if row is an array and convert to object using field map
+        if (Array.isArray(row)) {
+            Object.values(fieldMap).forEach((hebrewField, index) => {
+                newRow[hebrewField] = row[index]
+            })
+        } else {
+            Object.entries(fieldMap).forEach(([xlsxField, hebrewField]) => {
+                newRow[hebrewField] = row[xlsxField]
+            })
+        }
         return newRow
     })
 
-    // Find the header row index
+    // Find the header row index by checking for the word 'תאריך' in first position
     const headerRowIndex = normalizedRows.findIndex(row => 
-        Object.values(row).includes('חובה')
+        row['תאריך'] === 'תאריך'
     )
     
     if (headerRowIndex === -1) {

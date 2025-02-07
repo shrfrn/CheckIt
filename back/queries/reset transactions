@@ -1,2 +1,4 @@
 -- SQLite
-drop table transactions
+-- drop table transactions
+
+delete from transactions

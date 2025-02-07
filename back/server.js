@@ -8,6 +8,7 @@ import { dbService } from './services/db.service.js'
 import { normalizeChaseCreditData } from './normalizers/chaseCreditNormalizer.js'
 import { normalizeChaseCheckingData } from './normalizers/chaseCheckingNormalizer.js'
 import { normalizeHapoalimStatementData } from './normalizers/hapoalimStatementNormalizer.js'
+import { normalizeMcStatementData } from './normalizers/mcNormalizer.js'
 
 const app = express()
 app.use(cors())
@@ -19,12 +20,16 @@ const db = await dbService.initDatabase()
 async function processSpreadsheet(buffer, sheetType) {
 	const workbook = XLSX.read(buffer, { type: 'buffer' })
 	const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-	const jsonData = XLSX.utils.sheet_to_json(firstSheet)
+	
+	// Convert to array of arrays format instead of array of objects
+	const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 })
+    console.log('jsonData first few rows:', jsonData.slice(0, 5))
 
 	const normalizers = {
 		chaseCredit: normalizeChaseCreditData,
 		chaseChecking: normalizeChaseCheckingData,
 		hapoalimStatement: normalizeHapoalimStatementData,
+		mcStatement: normalizeMcStatementData,
 	}
 
 	const normalizer = normalizers[sheetType]
@@ -39,6 +44,7 @@ async function processSpreadsheet(buffer, sheetType) {
 app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
 	try {
 		const { type } = req.params
+		console.log('type', type)
 		const normalizedData = await processSpreadsheet(req.file.buffer, type)
 		console.log('normalizedData', normalizedData)
 		await db('transactions').insert(normalizedData)

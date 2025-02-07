@@ -1,2 +1,3 @@
 back/node_modules
 back/db/transactions.sqlite
+**/.DS_Store

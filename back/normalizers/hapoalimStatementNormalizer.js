@@ -46,6 +46,8 @@ export function normalizeHapoalimStatementData(rows) {
         throw new Error('Could not find header row in data')
     }
 
+    const requestTimestamp = Date.now()
+
     // Get the actual data rows and transform them
     return normalizedRows
         .slice(headerRowIndex + 1)
@@ -60,6 +62,9 @@ export function normalizeHapoalimStatementData(rows) {
             valueDate: excelDateToISOString(row['תאריך ערך']),
             beneficiary: row['לטובת'] || '',
             comments: row['עבור'] || '',
-            source: 'Hapoalim Bank'
+            source: 'Hapoalim Bank',
+            insertedAt: requestTimestamp,
+            category: '',
+            currency: 'NIS'
         }))
 } 

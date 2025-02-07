@@ -6,6 +6,21 @@ function excelDateToISOString(dateStr) {
     return date.toISOString().split('T')[0]
 }
 
+function convertCurrencySymbolToCode(symbol) {
+    if (!symbol) return 'NIS'
+    
+    const currencyMap = {
+        '₪': 'NIS',
+        '$': 'USD',
+        '€': 'EUR',
+        '£': 'GBP'
+    }
+
+    // Clean the symbol from any whitespace or special characters
+    const cleanSymbol = symbol.toString().trim()
+    return currencyMap[cleanSymbol] || cleanSymbol
+}
+
 // const fieldMap = {
 //     0: 'date',
 //     1: 'title',
@@ -53,6 +68,8 @@ export function normalizeMcStatementData(rows) {
         throw new Error('Could not find regular transactions section')
     }
 
+    const requestTimestamp = Date.now()
+
     // Process regular transactions
     const regularTransactions = cleanRows
         .slice(regularHeaderRow + 1)
@@ -73,7 +90,10 @@ export function normalizeMcStatementData(rows) {
                 valueDate: excelDateToISOString(row[0]),
                 beneficiary: '', // Not available in this format
                 comments: row[7] || '',
-                source: 'MC'
+                source: 'MC',
+                insertedAt: requestTimestamp,
+                category: '',
+                currency: convertCurrencySymbolToCode(row[5]) // Column 5 for regular transactions
             }
         })
         .filter(transaction => transaction !== null) // Remove any transactions with invalid amounts
@@ -107,7 +127,10 @@ export function normalizeMcStatementData(rows) {
                         valueDate: excelDateToISOString(row[0]),
                         beneficiary: '',
                         comments: '',
-                        source: 'MC'
+                        source: 'MC',
+                        insertedAt: requestTimestamp,
+                        category: '',
+                        currency: convertCurrencySymbolToCode(row[6]) // Column 6 for foreign transactions
                     }
                 })
                 .filter(transaction => transaction !== null) // Remove any transactions with invalid amounts

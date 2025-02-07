@@ -1,0 +1,6 @@
+-- SQLite
+
+select source,insertedAt, count(*) as count
+from transactions
+group by insertedAt
+order by insertedAt

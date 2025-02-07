@@ -38,6 +38,9 @@ async function initDatabase() {
 			table.string('beneficiary')
 			table.text('comments')
 			table.string('source')
+			table.timestamp('insertedAt').notNullable()
+			table.string('category')
+			table.string('currency').notNullable()
 		})
 
 		// Create indices

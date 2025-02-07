@@ -1,4 +1,4 @@
 -- SQLite
 select * from transactions
-where source = 'MC'
+where source = 'Hapoalim Bank'
 order by date

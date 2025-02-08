@@ -7,6 +7,28 @@ function excelDateToISOString(excelDate) {
     return dateObj.toISOString().split('T')[0]
 }
 
+function extractSourceFromData(rows) {
+    if (!rows?.[1]?.[0]) {
+        throw new Error('Could not find source data in expected location (row 4, column 1)')
+    }
+    
+    const sourceCell = rows[1][0].toString()
+    
+    // First try exact pattern
+    let matches = sourceCell.match(/\d+-\d+-\d+/)
+    if (!matches) {
+        // If exact pattern fails, try finding any numbers and format them
+        const numbers = sourceCell.match(/\d+/g)
+        if (numbers && numbers.length >= 3) {
+            return `${numbers[0]}-${numbers[1]}-${numbers[2]}`
+        }
+        console.log('Failed to match account number pattern in:', sourceCell)
+        throw new Error('Could not find account number pattern in source cell')
+    }
+    
+    return matches[0]
+}
+
 const fieldMap = {
     'תנועות בחשבון': 'תאריך',
     '__EMPTY': 'הפעולה',
@@ -21,6 +43,8 @@ const fieldMap = {
 }
 
 export function normalizeHapoalimStatementData(rows) {
+    const source = extractSourceFromData(rows)
+    
     // Transform the data to use our expected field names
     const normalizedRows = rows.map(row => {
         const newRow = {}
@@ -62,7 +86,7 @@ export function normalizeHapoalimStatementData(rows) {
             valueDate: excelDateToISOString(row['תאריך ערך']),
             beneficiary: row['לטובת'] || '',
             comments: row['עבור'] || '',
-            source: 'Hapoalim Bank',
+            source,
             insertedAt: requestTimestamp,
             category: '',
             currency: 'NIS'

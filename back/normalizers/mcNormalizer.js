@@ -58,9 +58,24 @@ function findHeaderRow(rows, headerText) {
         row.some(cell => cell && cell.toString().includes(headerText)))
 }
 
+function extractSourceFromData(rows) {
+    if (!rows?.[2]?.[0]) {
+        throw new Error('Could not find source data in expected location (row 4, column 1)')
+    }
+    
+    const sourceCell = rows[2][0].toString()
+    const matches = sourceCell.match(/\d+/)
+    if (!matches) {
+        throw new Error('Could not find card number in source cell')
+    }
+    
+    return matches[0]
+}
+
 export function normalizeMcStatementData(rows) {
     // Clean up empty rows and ensure we have array data
     const cleanRows = rows.filter(row => Array.isArray(row) && row.length > 0)
+    const source = extractSourceFromData(cleanRows)
 
     // Find the start of regular transactions section
     const regularHeaderRow = findHeaderRow(cleanRows, 'תאריך')
@@ -90,7 +105,7 @@ export function normalizeMcStatementData(rows) {
                 valueDate: excelDateToISOString(row[0]),
                 beneficiary: '', // Not available in this format
                 comments: row[7] || '',
-                source: 'MC',
+                source,
                 insertedAt: requestTimestamp,
                 category: '',
                 currency: convertCurrencySymbolToCode(row[5]) // Column 5 for regular transactions
@@ -127,7 +142,7 @@ export function normalizeMcStatementData(rows) {
                         valueDate: excelDateToISOString(row[0]),
                         beneficiary: '',
                         comments: '',
-                        source: 'MC',
+                        source,
                         insertedAt: requestTimestamp,
                         category: '',
                         currency: convertCurrencySymbolToCode(row[6]) // Column 6 for foreign transactions

@@ -2,6 +2,7 @@
 const state = {
 	fileData: null,
 	sheetType: null,
+	fileEncoding: 'utf-8'
 }
 
 // DOM utilities
@@ -32,6 +33,7 @@ const api = {
 	uploadFile: async (file, type) => {
 		const formData = new FormData()
 		formData.append('file', file)
+		formData.append('encoding', state.fileEncoding)
 
 		const response = await fetch(`http://localhost:3000/api/upload/${type}`, {
 			method: 'POST',
@@ -59,6 +61,10 @@ const api = {
 const handleFileSelect = () => {
 	const file = dom.getFileInput().files[0]
 	if (file) {
+		// Set appropriate encoding for Hebrew CSV files
+		if (file.name.toLowerCase().endsWith('.csv')) {
+			state.fileEncoding = 'utf-8'
+		}
 		state.fileData = file
 		updateUI.processButton()
 	}

@@ -21,14 +21,6 @@ function convertCurrencySymbolToCode(symbol) {
     return currencyMap[cleanSymbol] || cleanSymbol
 }
 
-// const fieldMap = {
-//     0: 'date',
-//     1: 'title',
-//     4: 'amount',
-//     6: 'transactionId',
-//     7: 'comments'
-// }
-
 function parseAmount(amount) {
     if (!amount || amount === '_') return null
 
@@ -71,6 +63,8 @@ function extractSourceFromData(rows) {
     
     return matches[0]
 }
+
+// TODO split into multiple functions
 
 export function normalizeMcStatement(rows) {
     // Clean up empty rows and ensure we have array data

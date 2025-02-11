@@ -1,3 +1,4 @@
 -- SQLite
 select * from transactions
+where balance not null
 order by date

@@ -72,7 +72,7 @@ function extractSourceFromData(rows) {
     return matches[0]
 }
 
-export function normalizeMcStatementData(rows) {
+export function normalizeMcStatement(rows) {
     // Clean up empty rows and ensure we have array data
     const cleanRows = rows.filter(row => Array.isArray(row) && row.length > 0)
     const source = extractSourceFromData(cleanRows)

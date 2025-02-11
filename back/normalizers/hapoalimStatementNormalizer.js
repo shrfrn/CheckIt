@@ -42,7 +42,7 @@ const fieldMap = {
     '__EMPTY_8': 'עבור'
 }
 
-export function normalizeHapoalimStatementData(rows) {
+export function normalizeHapoalimStatement(rows) {
     const source = extractSourceFromData(rows)
     
     // Transform the data to use our expected field names

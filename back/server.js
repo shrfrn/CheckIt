@@ -54,6 +54,26 @@ app.get('/api/uncategorized', async (req, res) => {
     }
 })
 
+app.patch('/api/transactions', express.json(), async (req, res) => {
+    try {
+        const updates = req.body
+        if (!Array.isArray(updates) || !updates.every(u => u.id && u.category)) {
+            return res.status(400).json({ 
+                error: 'Invalid request format. Expected array of objects with id and category fields' 
+            })
+        }
+
+        const updatedCount = await transactionService.updateCategories(updates)
+        res.json({ 
+            message: 'Categories updated successfully',
+            updatedCount 
+        })
+    } catch (error) {
+        console.error('Error updating categories:', error)
+        res.status(500).json({ error: error.message })
+    }
+})
+
 // Start server
 app.listen(3000, () => {
     console.log('Server running on port 3000')

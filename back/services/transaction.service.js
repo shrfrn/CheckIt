@@ -3,7 +3,8 @@ import { db } from './db.service.js'
 export const transactionService = {
     insertMany,
     getCount,
-    getUncategorizedBatch
+    getUncategorizedBatch,
+    updateCategories
 }
 
 function insertMany(transactions) {
@@ -84,4 +85,16 @@ async function getUncategorizedBatch() {
         categorySuggestions,
         otherCategories
     }
+}
+
+async function updateCategories(updates) {
+    const result = await db('transactions')
+        .whereIn('id', updates.map(u => u.id))
+        .update({
+            category: db.raw('CASE id ' + 
+                updates.map(u => `WHEN ${u.id} THEN '${u.category}'`).join(' ') +
+                ' END')
+        })
+    
+    return result
 }

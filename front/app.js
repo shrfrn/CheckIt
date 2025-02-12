@@ -240,7 +240,7 @@ function renderTransactions(data) {
 		
 		// Transaction details
 		const dateCell = document.createElement('td')
-		dateCell.textContent = new Date(transaction.date).toLocaleDateString()
+		dateCell.textContent = new Date(transaction.date).toLocaleDateString('he-IL')
 		
 		const titleCell = document.createElement('td')
 		titleCell.textContent = transaction.title

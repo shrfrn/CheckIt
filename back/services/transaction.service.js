@@ -17,7 +17,7 @@ function getCount() {
     return db('transactions').count('* as count').first()
 }
 
-async function getUncategorizedBatch() {
+async function getUncategorizedTransactions() {
     // First get the most frequent uncategorized title
     const mostFrequentTitle = await db.with('uncategorized_title_counts', (qb) => {
         qb.select('title')
@@ -36,10 +36,10 @@ async function getUncategorizedBatch() {
     .join('max_count', 'title_count', '=', 'max_title_count')
     .first()
 
-    if (!mostFrequentTitle) return { uncategorizedTransactions: [], categorySuggestions: [] }
+    if (!mostFrequentTitle) return []
 
     // Get all uncategorized transactions with this title
-    const uncategorizedTransactions = await db('transactions')
+    return db('transactions')
         .select('*')
         .where('title', mostFrequentTitle.title)
         .andWhere(qb => {
@@ -47,16 +47,24 @@ async function getUncategorizedBatch() {
               .orWhere('category', '')
         })
         .orderBy('date', 'desc')
+}
 
-    // Get category suggestions for this title
-    const categorySuggestions = await db('transactions')
+async function getCategorySuggestions(title) {
+    return db('transactions')
         .select('category')
         .count('* as count')
-        .where('title', mostFrequentTitle.title)
+        .where('title', title)
         .whereNotNull('category')
         .andWhere('category', '!=', '')
         .groupBy('category')
         .orderBy('count', 'desc')
+}
+
+async function getUncategorizedBatch() {
+    const uncategorizedTransactions = await getUncategorizedTransactions()
+    if (!uncategorizedTransactions.length) return { uncategorizedTransactions: [], categorySuggestions: [] }
+
+    const categorySuggestions = await getCategorySuggestions(uncategorizedTransactions[0].title)
 
     return {
         uncategorizedTransactions,

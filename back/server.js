@@ -3,29 +3,25 @@ import cors from 'cors'
 import multer from 'multer'
 
 import { processSpreadsheet } from './normalizers/index.js'
-import { dbService } from './services/db.service.js'
+import { transactionService } from './services/transaction.service.js'
 
 const app = express()
 app.use(cors())
 
 const upload = multer({ storage: multer.memoryStorage() })
-const db = await dbService.initDatabase()
+// const db = await dbService.initDatabase()
 
 // API Routes
 app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
 	try {
 		const { type } = req.params
-		const normalizedData = await processSpreadsheet(req.file.buffer, type, req.file.originalname)
+		const transactions = await processSpreadsheet(req.file.buffer, type, req.file.originalname)
 		
-		const beforeCount = await db('transactions').count('* as count').first()
-		
-		await db('transactions')
-			.insert(normalizedData)
-			.onConflict(['date', 'title', 'amount', 'transactionId'])
-			.ignore()
-			
-		const afterCount = await db('transactions').count('* as count').first()
-		const insertedCount = afterCount.count - beforeCount.count
+		const beforeCount = await transactionService.getCount()
+		await transactionService.insertMany(transactions)
+		const afterCount = await transactionService.getCount()
+
+        const insertedCount = afterCount.count - beforeCount.count
 
 		res.json({ 
 			message: 'File processed successfully', 

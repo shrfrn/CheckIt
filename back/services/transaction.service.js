@@ -18,23 +18,25 @@ function getCount() {
 }
 
 async function getUncategorizedTransactions() {
+
     // First get the most frequent uncategorized title
-    const mostFrequentTitle = await db.with('uncategorized_title_counts', (qb) => {
+    const mostFrequentTitle = await db.with('uncategorized_title_counts', qb => {
         qb.select('title')
           .count('* as title_count')
           .from('transactions')
           .whereNull('category')
           .orWhere('category', '')
-          .groupBy('title')
-    })
-    .with('max_count', (qb) => {
-        qb.select(db.raw('MAX(title_count) as max_title_count'))
-          .from('uncategorized_title_counts')
-    })
-    .select('title')
-    .from('uncategorized_title_counts')
-    .join('max_count', 'title_count', '=', 'max_title_count')
-    .first()
+          .groupBy('title')})
+
+        .with('max_count', qb => {
+            qb.select(db.raw('MAX(title_count) as max_title_count'))
+            .from('uncategorized_title_counts')
+        })
+        
+        .select('title')
+        .from('uncategorized_title_counts')
+        .join('max_count', 'title_count', '=', 'max_title_count')
+        .first()
 
     if (!mostFrequentTitle) return []
 
@@ -60,14 +62,26 @@ async function getCategorySuggestions(title) {
         .orderBy('count', 'desc')
 }
 
+async function getAllOtherCategories(excludeCategories) {
+    const results = await db('categories')
+        .select('category')
+        .whereNotIn('category', excludeCategories)
+        .orderBy('category')
+    
+    return results.map(r => r.category)
+}
+
 async function getUncategorizedBatch() {
     const uncategorizedTransactions = await getUncategorizedTransactions()
-    if (!uncategorizedTransactions.length) return { uncategorizedTransactions: [], categorySuggestions: [] }
+    if (!uncategorizedTransactions.length) return { uncategorizedTransactions: [], categorySuggestions: [], otherCategories: [] }
 
     const categorySuggestions = await getCategorySuggestions(uncategorizedTransactions[0].title)
+    const suggestedCategoryNames = categorySuggestions.map(s => s.category)
+    const otherCategories = await getAllOtherCategories(suggestedCategoryNames)
 
     return {
         uncategorizedTransactions,
-        categorySuggestions
+        categorySuggestions,
+        otherCategories
     }
 }

@@ -45,6 +45,8 @@ app.get('/api/transactions', async (req, res) => {
 })
 
 // Start server
-app.listen(3000, () => {
+app.listen(3000, async () => {
     console.log('Server running on port 3000')
+    const uncategorizedBatch = await transactionService.getUncategorizedBatch()
+    console.log(uncategorizedBatch)
 })

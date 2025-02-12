@@ -54,6 +54,23 @@ const api = {
 			throw new Error('Failed to fetch transactions')
 		}
 		return response.json()
+	},
+
+	updateCategories: async updates => {
+		const response = await fetch('http://localhost:3000/api/transactions', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updates)
+		})
+
+		if (!response.ok) {
+			const error = await response.json()
+			throw new Error(error.message)
+		}
+
+		return response.json()
 	}
 }
 
@@ -106,6 +123,7 @@ const sheetTypeSelect = document.querySelector('.sheet-type-select')
 const processButton = document.querySelector('.process-button')
 const statusMessage = document.querySelector('.status-message')
 const transactionsGrid = document.querySelector('.transactions-grid tbody')
+const transactionCount = document.querySelector('.transaction-count')
 
 // Navigation
 function showUploadView() {
@@ -226,12 +244,20 @@ function createCategorySelect(transaction, categorySuggestions, otherCategories)
 	return select
 }
 
+function updateTransactionCount() {
+	const totalRows = transactionsGrid.querySelectorAll('tr').length
+	const excludedRows = transactionsGrid.querySelectorAll('.exclude-checkbox:checked').length
+	const activeRows = totalRows - excludedRows
+	transactionCount.textContent = `(${activeRows} transactions)`
+}
+
 function renderTransactions(data) {
 	const { uncategorizedTransactions, categorySuggestions, otherCategories } = data
 	transactionsGrid.innerHTML = ''
 	
 	uncategorizedTransactions.forEach(transaction => {
 		const row = document.createElement('tr')
+		row.dataset.transactionId = transaction.id
 		
 		// Category select
 		const categoryCell = document.createElement('td')
@@ -260,6 +286,7 @@ function renderTransactions(data) {
 		const excludeCheckbox = document.createElement('input')
 		excludeCheckbox.type = 'checkbox'
 		excludeCheckbox.className = 'exclude-checkbox'
+		excludeCheckbox.addEventListener('change', updateTransactionCount)
 		excludeCell.appendChild(excludeCheckbox)
 		
 		// Append all cells
@@ -272,7 +299,63 @@ function renderTransactions(data) {
 		
 		transactionsGrid.appendChild(row)
 	})
+
+	updateTransactionCount()
 }
 
+function getSelectedCategories() {
+	const rows = transactionsGrid.querySelectorAll('tr')
+	const updates = []
+
+	rows.forEach(row => {
+		const select = row.querySelector('.category-select')
+		const excludeCheckbox = row.querySelector('.exclude-checkbox')
+		
+		// Skip if row is excluded or no category selected
+		if (excludeCheckbox.checked || !select.value) return
+		
+		// Get transaction ID from the data attribute we'll add in renderTransactions
+		const id = row.dataset.transactionId
+		updates.push({
+			id: parseInt(id),
+			category: select.value
+		})
+	})
+
+	return updates
+}
+
+// Add submit button handler
+const submitButton = document.querySelector('.submit-button')
+submitButton.addEventListener('click', async () => {
+	const updates = getSelectedCategories()
+	
+	if (updates.length === 0) {
+		alert('No categories selected to update')
+		return
+	}
+
+	const shouldProceed = confirm(`Are you sure you want to update ${updates.length} transactions?`)
+	if (!shouldProceed) return
+
+	try {
+		const result = await api.updateCategories(updates)
+		const message = `Successfully updated ${result.updatedCount} transactions.`
+		
+		const shouldLoadMore = confirm(`${message}\n\nWould you like to load another batch of transactions?`)
+		if (shouldLoadMore) {
+			loadUncategorizedTransactions()
+		}
+	} catch (error) {
+		alert('Error updating categories: ' + error.message)
+		console.error('Update error:', error)
+	}
+})
+
 // Initialize view
-showUploadView()
+// TODO fix routing
+(function initializeApp() {
+	uploadContainer.style.display = 'none'
+	transactionsContainer.style.display = 'none'
+	uploadLink.click() // Start with upload view by simulating click on upload link
+})()

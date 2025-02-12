@@ -1,4 +1,4 @@
 -- SQLite
 select title, category from transactions
-where title = 'WOLT'
+where title = 'מגדל חיים/בריאות' and category is ''
 order by date

@@ -44,9 +44,17 @@ app.get('/api/transactions', async (req, res) => {
 	}
 })
 
+app.get('/api/uncategorized', async (req, res) => {
+    try {
+        const batch = await transactionService.getUncategorizedBatch()
+        res.json(batch)
+    } catch (error) {
+        console.error('Error fetching uncategorized transactions:', error)
+        res.status(500).json({ error: error.message })
+    }
+})
+
 // Start server
-app.listen(3000, async () => {
+app.listen(3000, () => {
     console.log('Server running on port 3000')
-    const uncategorizedBatch = await transactionService.getUncategorizedBatch()
-    console.log(uncategorizedBatch)
 })

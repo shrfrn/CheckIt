@@ -4,6 +4,8 @@ import { api, updateStatusMessage } from './utils.js'
 const transactionsGrid = document.querySelector('.transactions-grid tbody')
 const transactionCount = document.querySelector('.transaction-count')
 const submitButton = document.querySelector('.submit-button')
+const detailsDialog = document.querySelector('.details-dialog')
+const dialogContent = detailsDialog.querySelector('.dialog-content')
 
 // Create modal
 function createModal() {
@@ -32,7 +34,7 @@ function createModal() {
 // Create modal instance
 const { modalOverlay, content: modalContent } = createModal()
 
-// Show transaction details in modal
+// Show transaction details in dialog
 async function showTransactionDetails(id) {
     try {
         const transaction = await api.getTransactionDetails(id)
@@ -52,7 +54,7 @@ async function showTransactionDetails(id) {
             { label: 'Currency', value: transaction.currency || '-' }
         ]
         
-        modalContent.innerHTML = details
+        dialogContent.innerHTML = details
             .map(({ label, value }) => `
                 <div class="transaction-detail">
                     <div class="detail-label">${label}</div>
@@ -60,7 +62,7 @@ async function showTransactionDetails(id) {
                 </div>
             `).join('')
             
-        modalOverlay.classList.add('active')
+        detailsDialog.showModal()
     } catch (error) {
         console.error('Error fetching transaction details:', error)
         alert('Failed to load transaction details')

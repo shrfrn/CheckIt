@@ -168,36 +168,21 @@ body {
     height: 20px;
 }
 
-/* Modal Styles */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-overlay.active {
-    display: flex;
-}
-
-.modal {
-    background-color: white;
+/* Dialog Styles */
+.details-dialog {
     padding: 2rem;
     border-radius: 8px;
+    border: none;
     max-width: 600px;
     width: 90%;
     max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
 }
 
-.modal-close {
+.details-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -208,11 +193,11 @@ body {
     color: #666;
 }
 
-.modal-close:hover {
+.dialog-close:hover {
     color: #333;
 }
 
-.modal-content {
+.dialog-content {
     margin-top: 1rem;
 }
 

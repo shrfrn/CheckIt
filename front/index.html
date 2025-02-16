@@ -3,62 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+    <title>Expense Tracker - Home</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav class="nav">
         <ul class="nav-list">
-            <li><a href="#" class="nav-link upload-link">Upload</a></li>
-            <li><a href="#" class="nav-link categorize-link">Categorize</a></li>
+            <li><a href="index.html" class="nav-link active">Home</a></li>
+            <li><a href="upload.html" class="nav-link">Upload</a></li>
+            <li><a href="categorize.html" class="nav-link">Categorize</a></li>
         </ul>
     </nav>
 
-    <div class="upload-container">
-        <h1>Upload Transactions</h1>
+    <main class="home-container">
+        <h1>Welcome to Expense Tracker</h1>
         
-        <div class="file-input-group">
-            <label class="form-label">Select Spreadsheet File</label>
-            <input type="file" class="file-input" accept=".xlsx,.xls,.csv">
+        <section class="instructions">
+            <h2>How to Use</h2>
+            
+            <div class="instruction-step">
+                <h3>1. Upload Your Statements</h3>
+                <p>Start by uploading your bank statements or credit card transactions:</p>
+                <ul>
+                    <li>Go to the <a href="upload.html">Upload page</a></li>
+                    <li>Select your statement file (.xlsx, .xls, or .csv)</li>
+                    <li>Choose the correct statement type</li>
+                    <li>Click Process to import your transactions</li>
+                </ul>
+            </div>
+
+            <div class="instruction-step">
+                <h3>2. Categorize Transactions</h3>
+                <p>After uploading, organize your transactions:</p>
+                <ul>
+                    <li>Visit the <a href="categorize.html">Categorize page</a></li>
+                    <li>Assign categories to uncategorized transactions</li>
+                    <li>Use suggested categories based on transaction history</li>
+                    <li>Exclude irrelevant transactions if needed</li>
+                    <li>Submit your changes to save categorizations</li>
+                </ul>
+            </div>
+
+            <div class="instruction-step">
+                <h3>Supported Statement Types</h3>
+                <ul>
+                    <li>Master Statement</li>
+                    <li>Bank Hapoalim Statement</li>
+                    <li>Master Card Statement</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="action-buttons">
+            <a href="upload.html" class="primary-button">Start Uploading</a>
+            <a href="categorize.html" class="secondary-button">View Transactions</a>
         </div>
-
-        <div class="sheet-type-group">
-            <label class="form-label">Select Statement Type</label>
-            <select class="sheet-type-select">
-                <option value="">Choose a statement type...</option>
-                <option value="masterStatement">Master Statement</option>
-                <option value="hapoalimStatement">Bank Hapoalim Statement</option>
-                <option value="mcStatement">Master Card Statement</option>
-            </select>
-        </div>
-
-        <button class="process-button" disabled>Process Spreadsheet</button>
-        <button class="get-all-transactions">Show All Transactions</button>
-        <div class="status-message"></div>
-    </div>
-
-    <div class="transactions-container" style="display: none">
-        <header class="page-header">
-            <h1>Categorize Transactions <span class="transaction-count"></span></h1>
-            <button class="submit-button">Submit</button>
-        </header>
-        <table class="transactions-grid">
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Title</th>
-                    <th>Amount</th>
-                    <th>Actions</th>
-                    <th>Exclude</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Transactions will be inserted here -->
-            </tbody>
-        </table>
-    </div>
-
-    <script type="module" src="app.js"></script>
+    </main>
 </body>
 </html> 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Categorize</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <ul class="nav-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="upload.html" class="nav-link">Upload</a></li>
+            <li><a href="categorize.html" class="nav-link active">Categorize</a></li>
+        </ul>
+    </nav>
+
+    <main class="transactions-container">
+        <header class="page-header">
+            <h1>Categorize Transactions <span class="transaction-count"></span></h1>
+            <button class="submit-button">Submit</button>
+        </header>
+        
+        <table class="transactions-grid">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                    <th>Exclude</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Transactions will be inserted here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script type="module" src="js/categorize.js"></script>
+</body>
+</html> 

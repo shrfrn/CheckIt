@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Upload</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <ul class="nav-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="upload.html" class="nav-link active">Upload</a></li>
+            <li><a href="categorize.html" class="nav-link">Categorize</a></li>
+        </ul>
+    </nav>
+
+    <main class="upload-container">
+        <h1>Upload Transactions</h1>
+        
+        <div class="file-input-group">
+            <label class="form-label">Select Spreadsheet File</label>
+            <input type="file" class="file-input" accept=".xlsx,.xls,.csv">
+        </div>
+
+        <div class="sheet-type-group">
+            <label class="form-label">Select Statement Type</label>
+            <select class="sheet-type-select">
+                <option value="">Choose a statement type...</option>
+                <option value="masterStatement">Master Statement</option>
+                <option value="hapoalimStatement">Bank Hapoalim Statement</option>
+                <option value="mcStatement">Master Card Statement</option>
+            </select>
+        </div>
+
+        <button class="process-button" disabled>Process Spreadsheet</button>
+        <div class="status-message"></div>
+    </main>
+
+    <script type="module" src="js/upload.js"></script>
+</body>
+</html> 

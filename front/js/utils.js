@@ -49,6 +49,14 @@ export const api = {
         }
 
         return response.json()
+    },
+
+    getTransactionDetails: async id => {
+        const response = await fetch(`http://localhost:3000/api/transactions/${id}`)
+        if (!response.ok) {
+            throw new Error('Failed to fetch transaction details')
+        }
+        return response.json()
     }
 }
 

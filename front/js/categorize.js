@@ -5,6 +5,68 @@ const transactionsGrid = document.querySelector('.transactions-grid tbody')
 const transactionCount = document.querySelector('.transaction-count')
 const submitButton = document.querySelector('.submit-button')
 
+// Create modal
+function createModal() {
+    const modalOverlay = document.createElement('div')
+    modalOverlay.className = 'modal-overlay'
+    
+    const modalContent = document.createElement('div')
+    modalContent.className = 'modal'
+    
+    const closeButton = document.createElement('button')
+    closeButton.className = 'modal-close'
+    closeButton.textContent = '×'
+    closeButton.addEventListener('click', () => modalOverlay.classList.remove('active'))
+    
+    const content = document.createElement('div')
+    content.className = 'modal-content'
+    
+    modalContent.appendChild(closeButton)
+    modalContent.appendChild(content)
+    modalOverlay.appendChild(modalContent)
+    document.body.appendChild(modalOverlay)
+    
+    return { modalOverlay, content }
+}
+
+// Create modal instance
+const { modalOverlay, content: modalContent } = createModal()
+
+// Show transaction details in modal
+async function showTransactionDetails(id) {
+    try {
+        const transaction = await api.getTransactionDetails(id)
+        
+        const details = [
+            { label: 'Date', value: new Date(transaction.date).toLocaleDateString('he-IL') },
+            { label: 'Title', value: transaction.title },
+            { label: 'Amount', value: transaction.amount.toFixed(2) },
+            { label: 'Category', value: transaction.category || 'Uncategorized' },
+            { label: 'Details', value: transaction.details || '-' },
+            { label: 'Transaction ID', value: transaction.transactionId || '-' },
+            { label: 'Balance', value: transaction.balance ? transaction.balance.toFixed(2) : '-' },
+            { label: 'Value Date', value: transaction.valueDate ? new Date(transaction.valueDate).toLocaleDateString('he-IL') : '-' },
+            { label: 'Beneficiary', value: transaction.beneficiary || '-' },
+            { label: 'Comments', value: transaction.comments || '-' },
+            { label: 'Source', value: transaction.source || '-' },
+            { label: 'Currency', value: transaction.currency || '-' }
+        ]
+        
+        modalContent.innerHTML = details
+            .map(({ label, value }) => `
+                <div class="transaction-detail">
+                    <div class="detail-label">${label}</div>
+                    <div class="detail-value">${value}</div>
+                </div>
+            `).join('')
+            
+        modalOverlay.classList.add('active')
+    } catch (error) {
+        console.error('Error fetching transaction details:', error)
+        alert('Failed to load transaction details')
+    }
+}
+
 function createCategorySelect(transaction, categorySuggestions, otherCategories) {
     const select = document.createElement('select')
     select.className = 'category-select'
@@ -75,6 +137,7 @@ function renderTransactions(data) {
         const detailsButton = document.createElement('button')
         detailsButton.textContent = 'Details'
         detailsButton.className = 'action-button'
+        detailsButton.addEventListener('click', () => showTransactionDetails(transaction.id))
         actionsCell.appendChild(detailsButton)
         
         // Exclude checkbox

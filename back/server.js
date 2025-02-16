@@ -74,6 +74,22 @@ app.patch('/api/transactions', express.json(), async (req, res) => {
     }
 })
 
+app.get('/api/transactions/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const transaction = await transactionService.getTransactionById(id)
+            
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found' })
+        }
+        
+        res.json(transaction)
+    } catch (error) {
+        console.error('Query error:', error)
+        res.status(500).json({ error: error.message })
+    }
+})
+
 // Start server
 app.listen(3000, () => {
     console.log('Server running on port 3000')

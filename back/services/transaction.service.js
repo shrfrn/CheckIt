@@ -4,7 +4,8 @@ export const transactionService = {
     insertMany,
     getCount,
     getUncategorizedBatch,
-    updateCategories
+    updateCategories,
+    getTransactionById
 }
 
 function insertMany(transactions) {
@@ -97,4 +98,11 @@ async function updateCategories(updates) {
         })
     
     return result
+}
+
+async function getTransactionById(id) {
+    return db('transactions')
+        .select('*')
+        .where('id', id)
+        .first()
 }

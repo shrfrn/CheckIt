@@ -82,7 +82,6 @@ body {
 
 /* Button Styles */
 .process-button,
-.action-button,
 .submit-button {
     background-color: #4CAF50;
     color: white;
@@ -100,16 +99,11 @@ body {
     font-size: 1rem;
 }
 
-.action-button {
-    padding: 0.5rem 1rem;
-}
-
 .process-button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
 
-.action-button:hover,
 .submit-button:hover {
     background-color: #45a049;
 }
@@ -172,4 +166,88 @@ body {
 .exclude-checkbox {
     width: 20px;
     height: 20px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-content {
+    margin-top: 1rem;
+}
+
+.transaction-detail {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.transaction-detail:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.detail-value {
+    color: #333;
+}
+
+/* Action Button Styles */
+.action-button {
+    padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #e0e0e0;
 } 

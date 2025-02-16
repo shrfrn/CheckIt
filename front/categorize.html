@@ -39,14 +39,16 @@
     </main>
 
     <dialog class="details-dialog">
-        <form method="dialog">
-            <button class="dialog-close" value="close">×</button>
-        </form>
-        <div class="dialog-content"></div>
-        <div class="dialog-navigation">
-            <button class="nav-button prev-button" disabled>Previous</button>
-            <button class="nav-button next-button" disabled>Next</button>
+        <div class="dialog-header">
+            <div class="dialog-navigation">
+                <button class="nav-button prev-button" disabled>Previous</button>
+                <button class="nav-button next-button" disabled>Next</button>
+            </div>
+            <form method="dialog">
+                <button class="dialog-close" value="close">×</button>
+            </form>
         </div>
+        <div class="dialog-content"></div>
     </dialog>
 
     <script type="module" src="js/categorize.js"></script>

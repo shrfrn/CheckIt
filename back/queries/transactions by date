@@ -1,3 +1,4 @@
 -- SQLite
-select id from transactions
+select amount, title, date from transactions
+where category = ''
 order by date

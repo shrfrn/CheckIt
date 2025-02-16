@@ -199,6 +199,38 @@ body {
 
 .dialog-content {
     margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.dialog-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.nav-button {
+    padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.nav-button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.nav-button:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #eee;
 }
 
 .transaction-detail {

@@ -6,6 +6,12 @@ const transactionCount = document.querySelector('.transaction-count')
 const submitButton = document.querySelector('.submit-button')
 const detailsDialog = document.querySelector('.details-dialog')
 const dialogContent = detailsDialog.querySelector('.dialog-content')
+const prevButton = detailsDialog.querySelector('.prev-button')
+const nextButton = detailsDialog.querySelector('.next-button')
+
+// State for dialog navigation
+let currentTransactionIndex = -1
+let transactions = []
 
 // Create modal
 function createModal() {
@@ -111,13 +117,45 @@ function updateTransactionCount() {
     transactionCount.textContent = `(${activeRows} transactions)`
 }
 
+// Navigation functions
+function showTransactionAtIndex(index) {
+    if (index >= 0 && index < transactions.length) {
+        currentTransactionIndex = index
+        const transaction = transactions[index]
+        showTransactionDetails(transaction.id)
+        updateNavigationButtons()
+    }
+}
+
+function updateNavigationButtons() {
+    prevButton.disabled = currentTransactionIndex <= 0
+    nextButton.disabled = currentTransactionIndex >= transactions.length - 1
+}
+
+function showNextTransaction() {
+    showTransactionAtIndex(currentTransactionIndex + 1)
+}
+
+function showPreviousTransaction() {
+    showTransactionAtIndex(currentTransactionIndex - 1)
+}
+
+// Event listeners for navigation
+prevButton.addEventListener('click', showPreviousTransaction)
+nextButton.addEventListener('click', showNextTransaction)
+
+// Update renderTransactions to store transaction data
 function renderTransactions(data) {
     const { uncategorizedTransactions, categorySuggestions, otherCategories } = data
     transactionsGrid.innerHTML = ''
     
-    uncategorizedTransactions.forEach(transaction => {
+    // Store transactions for navigation
+    transactions = uncategorizedTransactions
+    
+    uncategorizedTransactions.forEach((transaction, index) => {
         const row = document.createElement('tr')
         row.dataset.transactionId = transaction.id
+        row.dataset.index = index
         
         // Category select
         const categoryCell = document.createElement('td')
@@ -139,7 +177,11 @@ function renderTransactions(data) {
         const detailsButton = document.createElement('button')
         detailsButton.textContent = 'Details'
         detailsButton.className = 'action-button'
-        detailsButton.addEventListener('click', () => showTransactionDetails(transaction.id))
+        detailsButton.addEventListener('click', () => {
+            currentTransactionIndex = index
+            showTransactionDetails(transaction.id)
+            updateNavigationButtons()
+        })
         actionsCell.appendChild(detailsButton)
         
         // Exclude checkbox

@@ -138,12 +138,12 @@ body {
 .transactions-grid {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
 }
 
 .transactions-grid th,
 .transactions-grid td {
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid #ddd;
     text-align: left;
 }
@@ -160,7 +160,7 @@ body {
 /* Form Controls */
 .category-select {
     min-width: 200px;
-    padding: 0.5rem;
+    padding: 0.1rem;
 }
 
 .exclude-checkbox {
@@ -241,9 +241,15 @@ body {
 }
 
 .transaction-detail {
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    margin-bottom: .5rem;
     border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+    flex-basis: 20ch;
 }
 
 .transaction-detail:last-child {

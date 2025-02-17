@@ -150,7 +150,7 @@ function renderTransactions(data) {
         const actionsCell = document.createElement('td')
         const detailsButton = document.createElement('button')
         detailsButton.textContent = 'Details'
-        detailsButton.className = 'action-button'
+        // detailsButton.className = 'action-button'
         detailsButton.addEventListener('click', () => {
             currentTransactionIndex = index
             showTransactionDetails(transaction.id)

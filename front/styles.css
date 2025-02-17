@@ -282,4 +282,75 @@ body {
 
 .action-button:hover {
     background-color: #e0e0e0;
+}
+
+/* Stats Page Styles */
+.stats-container {
+    padding: 2rem;
+}
+
+.year-selector {
+    margin-bottom: 2rem;
+}
+
+.year-select {
+    margin-left: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.stats-table-container {
+    overflow-x: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: right;
+}
+
+.stats-table th:first-child,
+.stats-table td:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 1;
+}
+
+.stats-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.stats-table .amount {
+    font-family: monospace;
+}
+
+.stats-table .total {
+    font-weight: bold;
+    background-color: #f8f8f8;
+}
+
+.stats-table .grand-total {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.totals-row {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.totals-row td:first-child {
+    background-color: #f5f5f5;
 } 

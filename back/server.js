@@ -90,6 +90,17 @@ app.get('/api/transactions/:id', async (req, res) => {
     }
 })
 
+app.get('/api/stats/:year', async (req, res) => {
+    try {
+        const { year } = req.params
+        const stats = await transactionService.getYearlyStats(year)
+        res.json(stats)
+    } catch (error) {
+        console.error('Error fetching yearly stats:', error)
+        res.status(500).json({ error: error.message })
+    }
+})
+
 // Start server
 app.listen(3000, () => {
     console.log('Server running on port 3000')

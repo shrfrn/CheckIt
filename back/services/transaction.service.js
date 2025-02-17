@@ -5,7 +5,8 @@ export const transactionService = {
     getCount,
     getUncategorizedBatch,
     updateCategories,
-    getTransactionById
+    getTransactionById,
+    getYearlyStats
 }
 
 function insertMany(transactions) {
@@ -105,4 +106,52 @@ async function getTransactionById(id) {
         .select('*')
         .where('id', id)
         .first()
+}
+
+async function getYearlyStats(year) {
+    // First, create a CTE (Common Table Expression) for months to ensure all months are represented
+    const monthsCTE = Array.from({ length: 12 }, (_, i) => {
+        const month = (i + 1).toString().padStart(2, '0')
+        return `SELECT '${month}' as month`
+    }).join(' UNION ALL ')
+
+    const categoryCase = `
+        CASE 
+            WHEN category IS NULL OR category = '' THEN 'uncategorized'
+            ELSE category 
+        END
+    `
+
+    const query = db.with('months', db.raw(monthsCTE))
+        .with('categories', qb => {
+            qb.distinct()
+                .select(db.raw(categoryCase + ' as category'))
+                .from('transactions')
+                .whereNot('category', 'לא לסכימה')
+                .andWhere(db.raw('strftime(\'%Y\', date) = ?', [year]))
+        })
+        .select([
+            'c.category',
+            'm.month',
+            db.raw('COALESCE(ROUND(SUM(t.amount), 2), 0) as total')
+        ])
+        .from('months as m')
+        .crossJoin('categories as c')
+        .leftJoin('transactions as t', function() {
+            this.on(db.raw('strftime(\'%m\', t.date)'), '=', 'm.month')
+                .andOn(db.raw(`
+                    CASE 
+                        WHEN t.category IS NULL OR t.category = '' THEN 'uncategorized'
+                        ELSE t.category 
+                    END
+                `), '=', 'c.category')
+                .andOn(db.raw('strftime(\'%Y\', t.date)'), '=', db.raw('?', [year]))
+                .andOn(db.raw('t.category != ?', ['לא לסכימה']))
+        })
+        .groupBy('c.category', 'm.month')
+        .orderBy(['c.category', 'm.month'])
+
+    const results = await query
+    
+    return results
 }

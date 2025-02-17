@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Statistics</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <ul class="nav-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="upload.html" class="nav-link">Upload</a></li>
+            <li><a href="categorize.html" class="nav-link">Categorize</a></li>
+            <li><a href="stats.html" class="nav-link active">Statistics</a></li>
+        </ul>
+    </nav>
+
+    <main class="stats-container">
+        <h1>Yearly Statistics</h1>
+        
+        <div class="year-selector">
+            <label for="yearSelect">Select Year:</label>
+            <select class="year-select" id="yearSelect"></select>
+        </div>
+
+        <div class="stats-table-container">
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Jan</th>
+                        <th>Feb</th>
+                        <th>Mar</th>
+                        <th>Apr</th>
+                        <th>May</th>
+                        <th>Jun</th>
+                        <th>Jul</th>
+                        <th>Aug</th>
+                        <th>Sep</th>
+                        <th>Oct</th>
+                        <th>Nov</th>
+                        <th>Dec</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="stats-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script type="module" src="js/stats.js"></script>
+</body>
+</html> 

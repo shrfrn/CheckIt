@@ -13,32 +13,6 @@ const nextButton = detailsDialog.querySelector('.next-button')
 let currentTransactionIndex = -1
 let transactions = []
 
-// Create modal
-function createModal() {
-    const modalOverlay = document.createElement('div')
-    modalOverlay.className = 'modal-overlay'
-    
-    const modalContent = document.createElement('div')
-    modalContent.className = 'modal'
-    
-    const closeButton = document.createElement('button')
-    closeButton.className = 'modal-close'
-    closeButton.textContent = '×'
-    closeButton.addEventListener('click', () => modalOverlay.classList.remove('active'))
-    
-    const content = document.createElement('div')
-    content.className = 'modal-content'
-    
-    modalContent.appendChild(closeButton)
-    modalContent.appendChild(content)
-    modalOverlay.appendChild(modalContent)
-    document.body.appendChild(modalOverlay)
-    
-    return { modalOverlay, content }
-}
-
-// Create modal instance
-const { modalOverlay, content: modalContent } = createModal()
 
 // Show transaction details in dialog
 async function showTransactionDetails(id) {

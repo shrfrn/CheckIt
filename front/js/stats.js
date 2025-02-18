@@ -126,6 +126,12 @@ function displayStats(stats) {
     const yearSelect = document.querySelector('.year-select')
     const selectedYear = yearSelect.value
 
+    // Add number formatter
+    const formatter = new Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0
+    })
+
     // Group by category
     const categoryMap = new Map()
     stats.forEach(stat => {
@@ -148,7 +154,7 @@ function displayStats(stats) {
         let yearTotal = 0
         monthlyTotals.forEach(total => {
             const cell = document.createElement('td')
-            cell.textContent = total.toFixed(2)
+            cell.textContent = formatter.format(Math.round(total))
             cell.classList.add('amount')
             row.appendChild(cell)
             yearTotal += total
@@ -156,7 +162,7 @@ function displayStats(stats) {
 
         // Add year total
         const totalCell = document.createElement('td')
-        totalCell.textContent = yearTotal.toFixed(2)
+        totalCell.textContent = formatter.format(Math.round(yearTotal))
         totalCell.classList.add('amount', 'total')
         row.appendChild(totalCell)
 
@@ -177,14 +183,14 @@ function displayStats(stats) {
             .reduce((sum, amounts) => sum + amounts[month], 0)
         
         const cell = document.createElement('td')
-        cell.textContent = monthlyTotal.toFixed(2)
+        cell.textContent = formatter.format(Math.round(monthlyTotal))
         cell.classList.add('amount', 'total')
         totalsRow.appendChild(cell)
         grandTotal += monthlyTotal
     }
 
     const grandTotalCell = document.createElement('td')
-    grandTotalCell.textContent = grandTotal.toFixed(2)
+    grandTotalCell.textContent = formatter.format(Math.round(grandTotal))
     grandTotalCell.classList.add('amount', 'grand-total')
     totalsRow.appendChild(grandTotalCell)
 

@@ -324,6 +324,18 @@ body {
     text-align: right;
 }
 
+.stats-table td.amount:not(.grand-total):not(.totals-row td) {
+    cursor: pointer;
+}
+
+.stats-table tr:nth-child(odd):not(.totals-row) {
+    background-color: #ffffff;
+}
+
+.stats-table tr:nth-child(even):not(.totals-row) {
+    background-color: #f9f9f9;
+}
+
 .stats-table th:first-child,
 .stats-table td:first-child {
     text-align: left;

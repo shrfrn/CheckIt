@@ -7,7 +7,7 @@ export const transactionService = {
     updateCategories,
     getTransactionById,
     getYearlyStats,
-    getTransactionsByDateAndCategory
+    query
 }
 
 function insertMany(transactions) {
@@ -157,28 +157,31 @@ async function getYearlyStats(year) {
     return results
 }
 
-async function getTransactionsByDateAndCategory(year, month, category) {
-    const startDate = `${year}-${month}-01`
-    const endDate = month === '12' 
-        ? `${parseInt(year) + 1}-01-01`
-        : `${year}-${(parseInt(month) + 1).toString().padStart(2, '0')}-01`
-
+async function query(filterBy = {}) {
     const query = db('transactions')
         .select('*')
-        .where(function() {
-            this.where('date', '>=', startDate)
-                .andWhere('date', '<', endDate)
-            
-            if (category === 'uncategorized') {
-                this.andWhere(function() {
-                    this.whereNull('category')
-                        .orWhere('category', '')
-                })
-            } else {
-                this.andWhere('category', category)
-            }
-        })
         .orderBy('date', 'desc')
+
+    if (filterBy.year && filterBy.month) {
+        const startDate = `${filterBy.year}-${filterBy.month}-01`
+        const endDate = filterBy.month === '12' 
+            ? `${parseInt(filterBy.year) + 1}-01-01`
+            : `${filterBy.year}-${(parseInt(filterBy.month) + 1).toString().padStart(2, '0')}-01`
+
+        query.where('date', '>=', startDate)
+            .andWhere('date', '<', endDate)
+    }
+    
+    if (filterBy.category) {
+        if (filterBy.category === 'uncategorized') {
+            query.where(function() {
+                this.whereNull('category')
+                    .orWhere('category', '')
+            })
+        } else {
+            query.where('category', filterBy.category)
+        }
+    }
 
     return query
 }

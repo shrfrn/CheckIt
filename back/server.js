@@ -36,15 +36,7 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
 
 app.get('/api/transactions', async (req, res) => {
     try {
-        const { year, month, category } = req.query
-        
-        let transactions
-        if (year && month && category) {
-            transactions = await transactionService.getTransactionsByDateAndCategory(year, month, category)
-        } else {
-            transactions = await db('transactions').select('*')
-        }
-        
+        const transactions = await transactionService.query(req.query)
         res.json(transactions)
     } catch (error) {
         console.error('Query error:', error)

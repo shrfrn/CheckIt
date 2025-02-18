@@ -6,7 +6,8 @@ export const transactionService = {
     getUncategorizedBatch,
     updateCategories,
     getTransactionById,
-    getYearlyStats
+    getYearlyStats,
+    getTransactionsByDateAndCategory
 }
 
 function insertMany(transactions) {
@@ -154,4 +155,30 @@ async function getYearlyStats(year) {
     const results = await query
     
     return results
+}
+
+async function getTransactionsByDateAndCategory(year, month, category) {
+    const startDate = `${year}-${month}-01`
+    const endDate = month === '12' 
+        ? `${parseInt(year) + 1}-01-01`
+        : `${year}-${(parseInt(month) + 1).toString().padStart(2, '0')}-01`
+
+    const query = db('transactions')
+        .select('*')
+        .where(function() {
+            this.where('date', '>=', startDate)
+                .andWhere('date', '<', endDate)
+            
+            if (category === 'uncategorized') {
+                this.andWhere(function() {
+                    this.whereNull('category')
+                        .orWhere('category', '')
+                })
+            } else {
+                this.andWhere('category', category)
+            }
+        })
+        .orderBy('date', 'desc')
+
+    return query
 }
